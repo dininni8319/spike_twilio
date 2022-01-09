@@ -24,7 +24,7 @@ class TwilioController extends Controller
 
         $room = $twilio->video->v1->rooms->create(['uniqueName' => $room_name]);
 
-        $indentify = "Streamer";   //Todo deve cambiare per ogni stremer!! es. id + name; 
+        $indentity = "Streamer";   //Todo deve cambiare per ogni stremer!! es. id + name; 
 
         $userSid = getenv('TWILIO_USER_SID');
 
@@ -34,7 +34,7 @@ class TwilioController extends Controller
             $userSid,   // USERSID
             $sid,      // API SID
             $token,    // SECRET
-            3600, $indentify
+            3600, $indentity
         );
         
         // Create your video grant
@@ -49,5 +49,24 @@ class TwilioController extends Controller
             "room_name" => $room_name,
             "jwt" => $token->toJWT()
         ]);
+    }
+    // public function joinRoom()
+    // {
+    //     return view('');
+    // }
+    public function closeRoom($room_sid) 
+    {
+        $sid = getenv("TWILIO_ACCOUNT_SID");
+        $token = getenv("TWILIO_AUTH_TOKEN");
+
+        $twilio = new Client($sid, $token);
+
+        $room = $twilio->video->v1->rooms($room_sid)->update("completed");
+
+        return response()->json([
+                'success' => true,
+                'room_sid' => $room_sid,
+                'message' => 'Room Completed'
+        ], 200);
     }
 }

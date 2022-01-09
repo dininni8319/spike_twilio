@@ -19,3 +19,7 @@ Route::get('/', function () {
 });
 
 Route::get('/twilio/newroom', [TwilioController::class, 'newRoom'])->name('twilio.newroom');
+
+Route::get('/twilio/joinroom', [TwilioController::class, 'joinRoom'])->name('twilio.joinroom');
+
+Route::get('/twilio/room/{room_sid}', [TwilioController::class, 'closeRoom'])->name('twilio.closeroom');
