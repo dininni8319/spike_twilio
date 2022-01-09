@@ -43,7 +43,7 @@
     
     JAVASCRIPT CODE FOR TWILIO NEW ROOM
     
-   <script src="//sdk.twilio.com/js/video/releases/2.15.3/twilio-video.min.js"></script>
+    <script src="https://sdk.twilio.com/js/video/releases/2.15.2/twilio-video.min.js"></script>
    <script>
 
        function log(str) {
@@ -69,10 +69,10 @@
 
        const connect = Video.connect;  // connect is a function of Video
 
-       const jwt = "{{ $jwt }}";
+       const jwt = "{{ $jwt}}";
 
        const room_name = "{{ $room_name }}";
-       console.log(room_name);
+      console.log(room_name);
        connect(jwt, { name: room_name }).then( room => {
            log(`Successfully joined a Room: ${room}`)
 

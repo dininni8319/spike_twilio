@@ -50,14 +50,44 @@ class TwilioController extends Controller
             "jwt" => $token->toJWT()
         ]);
     }
-    // public function joinRoom()
-    // {
-    //     return view('');
-    // }
+    public function joinRoom(Request $request)
+    {
+        
+        $room_sid = $request->input('room_sid');
+
+        $sid = getenv("TWILIO_ACCOUNT_SID");
+        $token = getenv("TWILIO_AUTH_TOKEN");
+        $userSid = getenv('TWILIO_USER_SID');
+
+        $indentity = "User Watcher" . rand(1, 100000000);
+        
+        //Create access toke, which will serialize and send to the client
+        $token = new AccessToken(
+            $userSid,   // USERSID
+            $sid,      // API SID
+            $token,    // SECRET
+            3600, $indentity
+        );
+        
+        $videoGrant = new VideoGrant();
+        $videoGrant->setRoom(($room_sid));
+        
+
+        //Add grant token
+        $token->addGrant($videoGrant);
+
+        return view('joinroom', [
+            "identity" => $indentity,
+            "room_sid" => $room_sid,
+            "jwt" => $token->toJWT()
+        ]);
+    }
+
     public function closeRoom($room_sid) 
     {
         $sid = getenv("TWILIO_ACCOUNT_SID");
         $token = getenv("TWILIO_AUTH_TOKEN");
+        
 
         $twilio = new Client($sid, $token);
 
