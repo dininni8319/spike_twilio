@@ -50,32 +50,32 @@ class TwilioController extends Controller
             "jwt" => $token->toJWT()
         ]);
     }
+    //  Here we catch the request
     public function joinRoom(Request $request)
     {
-        
         $room_sid = $request->input('room_sid');
-
+        // credentials -> Laravel towards Twilio
         $sid = getenv("TWILIO_ACCOUNT_SID");
         $token = getenv("TWILIO_AUTH_TOKEN");
         $userSid = getenv('TWILIO_USER_SID');
-
+        //are indentity
         $indentity = "User Watcher" . rand(1, 100000000);
         
         //Create access toke, which will serialize and send to the client
         $token = new AccessToken(
-            $userSid,   // USERSID
-            $sid,      // API SID
-            $token,    // SECRET
+            $userSid,  # USERSID
+            $sid,      # API SID
+            $token,    # SECRET
             3600, $indentity
         );
-        
+        // Create Video grant
         $videoGrant = new VideoGrant();
         $videoGrant->setRoom(($room_sid));
         
 
-        //Add grant token
+        //Add grant token, allowing the user to connect to the room
         $token->addGrant($videoGrant);
-
+        // return this information to the View
         return view('joinroom', [
             "identity" => $indentity,
             "room_sid" => $room_sid,
@@ -88,9 +88,9 @@ class TwilioController extends Controller
         $sid = getenv("TWILIO_ACCOUNT_SID");
         $token = getenv("TWILIO_AUTH_TOKEN");
         
-
+        /// I create here a Twilio Object
         $twilio = new Client($sid, $token);
-
+        // Here takes the room passed with a dynamic parameter
         $room = $twilio->video->v1->rooms($room_sid)->update("completed");
 
         return response()->json([
